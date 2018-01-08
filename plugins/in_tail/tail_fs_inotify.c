@@ -71,7 +71,7 @@ static int tail_fs_event(struct flb_input_instance *i_ins,
     }
 
     /* File was removed */
-    if (ev.mask & (IN_ATTRIB | IN_IGNORED)) {
+    if (ev.mask & (IN_DELETE_SELF | IN_IGNORED)) {
         flb_debug("[in_tail] removed %s", file->name);
         flb_tail_file_remove(file);
         return 0;
@@ -170,10 +170,10 @@ int flb_tail_fs_add(struct flb_tail_file *file)
      * we update the flags to receive notifications.
      */
     if (file->watch_fd == -1) {
-        flags = IN_ATTRIB | IN_IGNORED | IN_MOVE_SELF;
+        flags = IN_DELETE_SELF | IN_ATTRIB | IN_IGNORED | IN_MOVE_SELF;
     }
     else {
-        flags = IN_ATTRIB | IN_IGNORED | IN_MODIFY | IN_MOVE_SELF;
+        flags = IN_DELETE_SELF | IN_ATTRIB | IN_IGNORED | IN_MODIFY | IN_MOVE_SELF;
     }
 
     /* Register or update the flags */
